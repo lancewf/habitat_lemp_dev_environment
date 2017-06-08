@@ -7,6 +7,7 @@ There is no database attached to this only a place to drop php files.
 
 # Using
 
+```
 .
 ├── habitat
 │   ├── README.MD
@@ -19,7 +20,7 @@ There is no database attached to this only a place to drop php files.
 │   └── plan.sh
 └── source
     └── info.php
-
+```
 
 Setup your project like above. Where the habitat folder is the source from this repository. 
 The `source` folder should contain any files that should run on the PHP server. 
