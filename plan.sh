@@ -18,7 +18,7 @@ pkg_svc_run="php-fpm --nodaemonize"
 pkg_deps=(core/php core/curl core/nginx)
 
 pkg_exports=(
-   [port]=listening_port
+   [port]=http.listen.port
 )
 pkg_exposes=(port)
 

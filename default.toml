@@ -1,5 +1,3 @@
-listening_port=8080
-
 worker_processes = 4
 
 [events]
