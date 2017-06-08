@@ -34,9 +34,11 @@ This will create a docker image on your local computer.
 
 Exit out of the studio with `exit`,
 Run `docker image` and you should see a `lancefinfrock/php` image. 
-To run your docker container use `docker run -it -p 8080:8080 lancefinfrock/php`. 
+To run your docker container use `docker run -it -p 8080:8080 --name php_fun lancefinfrock/php`. 
 Test that the container is working by going to localhost:8080. 
 
 If you don't have a `index.php` file in the source directory you will have to goto localhost:8080/<your_file.php> 
 
 There you go! You have a running php server!
+
+
