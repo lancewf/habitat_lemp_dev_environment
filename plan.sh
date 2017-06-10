@@ -42,7 +42,8 @@ do_build(){
 }
 
 do_install() {
-  mkdir $pkg_prefix/public_html
-  cp source/* $pkg_prefix/public_html/
+  #Copy php files into the package
+  mkdir $pkg_prefix/php_files
+  cp source/* $pkg_prefix/php_files/
   return 0
 }

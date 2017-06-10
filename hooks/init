@@ -3,7 +3,7 @@
 exec 2>&1
 
 ############# PROJECT SETUP #############################
-cp -r {{pkg.path}}/public_html/* {{pkg.svc_data_path}}
+cp -r {{pkg.path}}/php_files/* {{pkg.svc_data_path}}
 
 chmod +x {{pkg.svc_data_path}}
 
@@ -19,3 +19,4 @@ cp -n {{pkgPathFor "core/php"}}/etc/php-fpm.d/www.conf.default {{pkgPathFor "cor
 
 hab svc load core/nginx --group {{svc.group}} --force
 
+echo "PHP listening on 0.0.0.0:{{cfg.http.listen.port}}"
