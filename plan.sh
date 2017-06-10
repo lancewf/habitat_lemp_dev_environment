@@ -1,8 +1,8 @@
 # This file is the heart of your application's habitat.
 # See full docs at https://www.habitat.sh/docs/reference/plan-syntax/
 
-pkg_name=php
-pkg_origin=lancefinfrock
+pkg_name=lemp
+pkg_origin=lancewf
 pkg_version="0.0.1"
 pkg_maintainer="Lance Finfrock <lfinfrock@chef.io>"
 pkg_license=('Apache-2.0')
@@ -15,7 +15,7 @@ pkg_svc_user=root
 pkg_svc_group=$pkg_svc_user
 pkg_svc_run="php-fpm --nodaemonize"
 
-pkg_deps=(core/php core/curl core/nginx)
+pkg_deps=(core/php core/nginx)
 
 pkg_exports=(
    [port]=http.listen.port
