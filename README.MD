@@ -20,7 +20,7 @@ This is a simple Habitat package to create a php server with nginx and mysql.
 └── docker-compose.yml <- contents below
 ```
 
-Setup your project like above. Where the habitat folder is the source from this repository. 
+Setup your project like above. Where the habitat folder is the file from this repository. 
 The `source` folder should contain any files that should run on the PHP server. It will make everything easier if you have 
 a `index.php` file. 
 
@@ -60,6 +60,8 @@ services:
    command: "start lancewf/lemp --peer database --bind database:mysql.lemp"
    ports:
      - "8080:8080"
+   volumes:
+     - ./source:/hab/svc/lemp/data
 volumes:
   data-volume: {}
 ```
