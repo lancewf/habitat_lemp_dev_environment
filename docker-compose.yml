@@ -1,0 +1,20 @@
+version: '2'
+services:
+  database:
+   image: core/mysql
+   command: "start core/mysql --group lemp"
+   environment:
+      HAB_MYSQL: |
+        app_username='lancewf'
+        app_password='lancewf'
+        bind='0.0.0.0'
+  lemp:
+   image: lancewf/lemp
+   command: "start lancewf/lemp --peer database --bind database:mysql.lemp"
+   ports:
+     - "8080:8080"
+   volumes:
+     - ./source:/hab/svc/lemp/data
+
+volumes:
+  data-volume: {}
