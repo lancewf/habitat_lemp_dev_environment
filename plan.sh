@@ -15,7 +15,7 @@ pkg_svc_user=root
 pkg_svc_group=$pkg_svc_user
 pkg_svc_run="php-fpm --nodaemonize"
 
-pkg_deps=(core/php core/nginx)
+pkg_deps=(core/php core/nginx core/mysql-client)
 
 pkg_exports=(
    [port]=http.listen.port
@@ -23,6 +23,7 @@ pkg_exports=(
 pkg_exposes=(port)
 
 pkg_binds=(
+  [database]="port username password"
 )
 
 do_download(){

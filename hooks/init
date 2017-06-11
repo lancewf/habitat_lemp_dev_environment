@@ -1,6 +1,18 @@
 #!/bin/bash
 
 exec 2>&1
+############# Connect to Database #############################
+echo "starting DATABASE!!!!!! {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}}"
+mysql_ready() {
+    mysqladmin ping -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} > /dev/null 2>&1
+}
+
+if !(mysql_ready) then
+     echo "waiting for mysql ..."
+     exit 1
+fi
+
+mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} -e "create database IF NOT EXISTS {{bind.database.first.cfg.username}}"
 
 ############# PROJECT SETUP #############################
 cp -r {{pkg.path}}/php_files/* {{pkg.svc_data_path}}
