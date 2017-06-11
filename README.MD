@@ -1,8 +1,6 @@
 # Habitat PHP Starter
 
-This is a simple Habitat package to create a php server with nginx.
-
-There is no database only a place to run php files. 
+This is a simple Habitat package to create a php server with nginx and mysql.
 
 # Using
 
@@ -42,6 +40,8 @@ Test that the container is working by going to localhost:8080.
 If you don't have a `index.php` file in the source directory you will have to goto localhost:8080/<your_file.php> 
 
 There you go! You have a running php server!
+
+If you want to explore the database run `docker-compose exec lemp mysql.sh` and you will be logged in the mysql shell. 
 
 docker-compose.yml
 ```
