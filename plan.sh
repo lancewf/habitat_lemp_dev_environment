@@ -3,7 +3,7 @@
 
 pkg_name=lemp
 pkg_origin=lancewf
-pkg_version="0.0.1"
+pkg_version="0.2.0"
 pkg_maintainer="Lance Finfrock <lfinfrock@chef.io>"
 pkg_license=('Apache-2.0')
 pkg_source=""
@@ -43,8 +43,5 @@ do_build(){
 }
 
 do_install() {
-  #Copy php files into the package
-  mkdir $pkg_prefix/php_files
-  cp source/* $pkg_prefix/php_files/
   return 0
 }

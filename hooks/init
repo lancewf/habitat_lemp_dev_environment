@@ -14,9 +14,12 @@ fi
 
 mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} -e "create database IF NOT EXISTS {{bind.database.first.cfg.username}}"
 
-############# PROJECT SETUP #############################
-cp -r {{pkg.path}}/php_files/* {{pkg.svc_data_path}}
+# create mysql entry
+printf "#! /bin/bash\n mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}}" >> /mysql.sh
 
+chmod +x /mysql.sh
+
+############# PROJECT SETUP #############################
 chmod +x {{pkg.svc_data_path}}
 
 chown -RL hab:hab {{pkg.svc_data_path}}
