@@ -1,4 +1,4 @@
-# Habitat PHP Development Environment
+# Habitat LEMP Development Environment
 
 This is a simple Habitat package to create a php server with nginx and mysql. This can be used for php development. Where one and change files and the database without restarting the service. 
 
