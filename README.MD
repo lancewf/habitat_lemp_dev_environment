@@ -18,7 +18,8 @@ There is no database only a place to run php files.
 │   │   └── run
 │   └── plan.sh
 └── source       <- your files go in here 
-    └── index.php 
+|    └── index.php 
+└── docker-compose.yml <- contents below
 ```
 
 Setup your project like above. Where the habitat folder is the source from this repository. 
@@ -29,16 +30,36 @@ From the root of this project, run `hab studio enter` (outside of the habitat fo
 When ran, you will enter a docker container where you can build your package. 
 
 In the studio run `build`. The package will be built. 
-To run this package in a docker container run 'hab pkg export docker lancefinfrock/php'. 
+To run this package in a docker container run 'hab pkg export docker lancewf/lemp'. 
 This will create a docker image on your local computer. 
+Then create the mysql docker container with 'hab pkg export docker core/mysql'
 
 Exit out of the studio with `exit`,
-Run `docker image` and you should see a `lancefinfrock/php` image. 
-To run your docker container use `docker run -it -p 8080:8080 --name php_fun lancefinfrock/php`. 
+Run `docker image` and you should see a `lancewf/lemp` and `core/mysql` images. 
+To run your project, goto the root of this project where the docker-compose.yml is and run `docker-compose up`. 
 Test that the container is working by going to localhost:8080. 
 
 If you don't have a `index.php` file in the source directory you will have to goto localhost:8080/<your_file.php> 
 
 There you go! You have a running php server!
 
-
+docker-compose.yml
+```
+version: '2'
+services:
+  database:
+   image: core/mysql
+   command: "start core/mysql --group lemp"
+   environment:
+      HAB_MYSQL: |
+        app_username='lancewf'
+        app_password='lancewf'
+        bind='0.0.0.0'
+  lemp:
+   image: lancewf/lemp
+   command: "start lancewf/lemp --peer database --bind database:mysql.lemp"
+   ports:
+     - "8080:8080"
+volumes:
+  data-volume: {}
+```
