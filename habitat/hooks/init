@@ -20,6 +20,8 @@ printf "#! /bin/bash\n mysql -h {{bind.database.first.sys.ip}} -u {{bind.databas
 chmod +x /mysql.sh
 
 ############# PROJECT SETUP #############################
+cp -r {{pkg.path}}/source_files/* {{pkg.svc_data_path}}
+
 chmod +x {{pkg.svc_data_path}}
 
 chown -RL hab:hab {{pkg.svc_data_path}}

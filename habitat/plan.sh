@@ -43,5 +43,9 @@ do_build(){
 }
 
 do_install() {
+  # Copy the source to deploy
+  #GLOBIGNORE='results:habitat:docker-compose.yml'
+  #mkdir $pkg_prefix/source_files
+  #cp -r * $pkg_prefix/source_files/.
   return 0
 }
