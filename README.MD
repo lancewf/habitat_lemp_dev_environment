@@ -44,3 +44,5 @@ File changes in the source directory are automatically reflected in the running 
 Change the `/habitat/database/create-tables.sql` file to add your own database data. 
 
 Change the `/habitat/config/database.conf` file to have a custum way to connect to the database. In the `habitat/hooks/init` update where the file is to be placed (line 26 in the `Project Setup` section. 
+
+https://github.com/lancewf/Marine-Mammal-Stranding-Network-Server is an example application that uses this project for development. 
