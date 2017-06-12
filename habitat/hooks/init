@@ -23,7 +23,7 @@ chmod +x /mysql.sh
 
 ############# PROJECT SETUP #############################
 echo "Copying source files"
-cp {{pkg.svc_config_path}}/index.php {{pkg.svc_data_path}}/index.php
+cp {{pkg.svc_config_path}}/database.conf {{pkg.svc_data_path}}/index.php
 
 chmod +x {{pkg.svc_data_path}}
 
