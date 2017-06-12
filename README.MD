@@ -6,19 +6,6 @@ This is a simple Habitat package to create a php server with nginx and mysql. Th
 
 ```
 .
-├── habitat    
-│   ├── config
-│   │   └── nginx.conf
-│   ├── default.toml
-│   ├── hooks
-│   │   ├── init
-│   │   └── run
-│   └── plan.sh
-└── source       <- your PHP files go in here 
-|    └── index.php 
-└── docker-compose.yml <- contents below
-└── README.MD
-
 ├── README.MD
 ├── docker-compose.yml
 ├── habitat
