@@ -47,5 +47,7 @@ do_install() {
   #GLOBIGNORE='results:habitat:docker-compose.yml'
   #mkdir $pkg_prefix/source_files
   #cp -r * $pkg_prefix/source_files/.
+  mkdir $pkg_prefix/database
+  cp -r habitat/database/* $pkg_prefix/database/.
   return 0
 }

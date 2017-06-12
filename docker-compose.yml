@@ -14,7 +14,7 @@ services:
    ports:
      - "8080:8080"
    volumes:
-     - ./source:/hab/svc/lemp/data
+     - .:/hab/svc/lemp/data
 
 volumes:
   data-volume: {}
