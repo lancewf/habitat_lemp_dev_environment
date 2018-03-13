@@ -1,0 +1,33 @@
+#!/bin/bash
+
+exec 2>&1
+
+# check if database exists
+mysql_ready() {
+    mysqladmin ping -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} > /dev/null 2>&1
+}
+
+if !(mysql_ready) then
+   echo "waiting for mysql ..."
+   exit 1
+fi
+
+# create database
+mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} -e "create database IF NOT EXISTS {{bind.database.first.cfg.username}}"
+mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} -D {{bind.database.first.cfg.username}} < {{pkg.path}}/database/create-tables.sql
+
+mkdir {{pkg.path}}/bin
+
+printf "#! /bin/bash\n mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}}" >> {{pkg.path}}/bin/mysql.sh
+
+chmod +x {{pkg.path}}/bin/mysql.sh
+chown hab:hab {{pkg.path}}/bin/mysql.sh
+
+cp {{pkg.path}}/static/* {{pkg.svc_path}}/{{cfg.location}}/.
+
+cp {{pkg.svc_config_path}}/database.conf {{pkg.svc_data_path}}/index.php
+
+# rename file so we can use fpm default
+cp -n {{pkgPathFor "core/php"}}/etc/php-fpm.d/www.conf.default {{pkgPathFor "core/php"}}/etc/php-fpm.d/www.conf
+chmod +x {{pkg.svc_data_path}}
+chown -R hab:hab {{pkg.svc_data_path}}
