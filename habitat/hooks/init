@@ -1,42 +1,38 @@
 #!/bin/bash
 
 exec 2>&1
-############# Connect to Database #############################
-echo "starting DATABASE!!!!!! {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}}"
+
+
+# check if database exists
 mysql_ready() {
     mysqladmin ping -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} > /dev/null 2>&1
 }
 
 if !(mysql_ready) then
-     echo "waiting for mysql ..."
-     exit 1
+   echo "waiting for mysql ..."
+   exit 1
 fi
 
+# create database
 mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} -e "create database IF NOT EXISTS {{bind.database.first.cfg.username}}"
+mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} -D {{bind.database.first.cfg.username}} < {{pkg.path}}/database/create-tables.sql
 
-mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}}  -D {{bind.database.first.cfg.username}} < {{pkg.path}}/database/create-tables.sql
+mkdir {{pkg.path}}/bin
 
-# create mysql entry
-printf "#! /bin/bash\n mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}}" >> /mysql.sh
+printf "#! /bin/bash\n mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}}" >> {{pkg.path}}/bin/mysql.sh
 
-chmod +x /mysql.sh
+chmod +x {{pkg.path}}/bin/mysql.sh
+chown hab:hab {{pkg.path}}/bin/mysql.sh
 
-############# PROJECT SETUP #############################
-echo "Copying source files"
+
+# website placement
+cp {{pkg.path}}/static/* {{pkg.svc_data_path}}/.
+
 cp {{pkg.svc_config_path}}/database.conf {{pkg.svc_data_path}}/index.php
 
 chmod +x {{pkg.svc_data_path}}
+chown -R hab:hab {{pkg.svc_data_path}}
 
-chown -RL hab:hab {{pkg.svc_data_path}}
-
-############# NGINX SETUP #############################
-# Copy the nginx config into position
-cp -r {{pkg.svc_config_path}}/nginx.conf \
-      {{pkgPathFor "core/nginx"}}/config/nginx.conf
-
-# rename file so we can use fpm default
-cp -n {{pkgPathFor "core/php"}}/etc/php-fpm.d/www.conf.default {{pkgPathFor "core/php"}}/etc/php-fpm.d/www.conf
-
-hab svc load core/nginx --group {{svc.group}} --force
-
-echo "PHP listening on 0.0.0.0:{{cfg.http.listen.port}}"
+# nginx setup
+mkdir -p {{pkg.svc_var_path}}/nginx
+chown hab:hab {{pkg.svc_var_path}}
