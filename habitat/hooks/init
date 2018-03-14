@@ -2,6 +2,7 @@
 
 exec 2>&1
 
+
 # check if database exists
 mysql_ready() {
     mysqladmin ping -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} > /dev/null 2>&1
@@ -23,11 +24,15 @@ printf "#! /bin/bash\n mysql -h {{bind.database.first.sys.ip}} -u {{bind.databas
 chmod +x {{pkg.path}}/bin/mysql.sh
 chown hab:hab {{pkg.path}}/bin/mysql.sh
 
-cp {{pkg.path}}/static/* {{pkg.svc_path}}/{{cfg.location}}/.
+
+# website placement
+cp {{pkg.path}}/static/* {{pkg.svc_data_path}}/.
 
 cp {{pkg.svc_config_path}}/database.conf {{pkg.svc_data_path}}/index.php
 
-# rename file so we can use fpm default
-cp -n {{pkgPathFor "core/php"}}/etc/php-fpm.d/www.conf.default {{pkgPathFor "core/php"}}/etc/php-fpm.d/www.conf
 chmod +x {{pkg.svc_data_path}}
 chown -R hab:hab {{pkg.svc_data_path}}
+
+# nginx setup
+mkdir -p {{pkg.svc_var_path}}/nginx
+chown hab:hab {{pkg.svc_var_path}}

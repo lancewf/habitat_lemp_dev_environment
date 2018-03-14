@@ -5,7 +5,8 @@ source "$(hab pkg path chef/ci-studio-common)/bin/studio-common"
 echo "set mouse-=a" >> ~/.vimrc
 
 export MYSQL_PORT=3306
-export LEMP_WEBSERVER_PORT=8080
+export LEMP_PORT=8080
+export PHP_FPM_PORT=9000
 
 function htop() {
   install_if_missing core/which which;
@@ -21,40 +22,58 @@ app_password='lancewf'
 bind='0.0.0.0'
 
 "
-  export HAB_LEMP_WEBSERVER="
+  export HAB_LEMP="
 [http.listen]
-port = $LEMP_WEBSERVER_PORT
+port = $LEMP_PORT
+
+"
+
+  export HAB_PHP_FPM="
+port = $PHP_FPM_PORT
+bind ='0.0.0.0'
 
 "
 }
 
-function start_webserver() {
- install_if_missing core/busybox-static netstat;
- netstat -an | grep $LEMP_WEBSERVER_PORT | grep LISTEN >/dev/null 2>/dev/null
- if [ $? == 0 ]; then
-   echo "webserver is already running";
-   return;
- fi
+function start() {
+  install_if_missing core/busybox-static netstat;
+  netstat -an | grep $LEMP_PORT | grep LISTEN >/dev/null 2>/dev/null
+  if [ $? == 0 ]; then
+    echo "lemp is already running";
+    return;
+  fi
 
- build webserver
+  start_mysql
 
- start_sup
+  start_php_fpm
 
- hab start $HAB_ORIGIN/lemp-webserver --bind site:lemp-site.default
-}
+  build
 
-function start_site() {
- start_mysql
- start_webserver
+  start_sup
 
- build site
+  hab start $HAB_ORIGIN/lemp --bind database:mysql.default --bind php-fpm:php-fpm.default
 
- hab start $HAB_ORIGIN/lemp-site --bind database:mysql.default --bind webserver:lemp-webserver.default
+  wait_or_fail_for_port_to_listen $LEMP_PORT
 }
 
 function mysql_shell() {
   install_if_missing core/mysql mysql;
-  $(hab pkg path $HAB_ORIGIN/lemp-site)/bin/mysql.sh
+  $(hab pkg path $HAB_ORIGIN/lemp)/bin/mysql.sh
+}
+
+function start_php_fpm() {
+  install_if_missing core/busybox-static netstat;
+  netstat -an | grep $PHP_FPM_PORT | grep LISTEN >/dev/null 2>/dev/null
+  if [ $? == 0 ]; then
+    echo "php-fpm is already running";
+    return;
+  fi
+
+  start_sup
+
+  hab start lancewf/php-fpm
+
+  wait_or_fail_for_port_to_listen $PHP_FPM_PORT
 }
 
 function start_mysql() {
@@ -104,7 +123,6 @@ history -r /src/.bash_history
 function cleanup() {
     save_history
 }
-
 
 # When exiting the studio save the bash history to a file
 trap cleanup EXIT
