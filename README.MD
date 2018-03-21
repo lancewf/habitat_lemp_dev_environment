@@ -34,10 +34,10 @@ From the root of this project, run `hab studio enter`.
 In the studio run `start`. This will preform the following steps inorder
 * First check if the service is already running
 * Starts mysql
-* String the php-fpm service need for parsing php files
+* String the php service need for parsing php files
 * builds the services hab pkg
 * Starts the sup with the custom config for each service. These are loaded from the 'load_dev_config' function
-* Starts the service with the mysql and php-fpm bindings
+* Starts the service with the mysql and php bindings
 * Waits until the service is started
 
 To see the project running to localhost:8080. Here you can see that the PHP code has pulled two rows from the database and displayed them on the screen. 

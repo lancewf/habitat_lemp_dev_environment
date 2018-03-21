@@ -14,7 +14,7 @@ pkg_deps=(core/nginx core/mysql-client)
 
 pkg_binds=(
   [database]="port username password"
-  [php-fpm]="port bind"
+  [php]="port"
 )
 
 do_build(){

@@ -6,7 +6,7 @@ echo "set mouse-=a" >> ~/.vimrc
 
 export MYSQL_PORT=3306
 export LEMP_PORT=8080
-export PHP_FPM_PORT=9000
+export PHP_PORT=9000
 
 function htop() {
   install_if_missing core/which which;
@@ -28,9 +28,9 @@ port = $LEMP_PORT
 
 "
 
-  export HAB_PHP_FPM="
-port = $PHP_FPM_PORT
-bind ='0.0.0.0'
+  export HAB_PHP="
+port = $PHP_PORT
+listen ='0.0.0.0'
 
 "
 }
@@ -45,13 +45,13 @@ function start() {
 
   start_mysql
 
-  start_php_fpm
+  start_php
 
   build
 
   start_sup
 
-  hab start $HAB_ORIGIN/lemp --bind database:mysql.default --bind php-fpm:php-fpm.default
+  hab start $HAB_ORIGIN/lemp --bind database:mysql.default --bind php:php.default
 
   wait_or_fail_for_port_to_listen $LEMP_PORT
 }
@@ -61,19 +61,19 @@ function mysql_shell() {
   $(hab pkg path $HAB_ORIGIN/lemp)/bin/mysql.sh
 }
 
-function start_php_fpm() {
+function start_php() {
   install_if_missing core/busybox-static netstat;
-  netstat -an | grep $PHP_FPM_PORT | grep LISTEN >/dev/null 2>/dev/null
+  netstat -an | grep $PHP_PORT | grep LISTEN >/dev/null 2>/dev/null
   if [ $? == 0 ]; then
-    echo "php-fpm is already running";
+    echo "php is already running";
     return;
   fi
 
   start_sup
 
-  hab start lancewf/php-fpm
+  hab start lancewf/php
 
-  wait_or_fail_for_port_to_listen $PHP_FPM_PORT
+  wait_or_fail_for_port_to_listen $PHP_PORT
 }
 
 function start_mysql() {
