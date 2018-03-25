@@ -13,7 +13,7 @@ pkg_svc_group=$pkg_svc_user
 pkg_deps=(core/nginx core/mysql-client)
 
 pkg_binds=(
-  [database]="port username password"
+  [database]="port username password local_only"
   [php]="port"
 )
 

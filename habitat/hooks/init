@@ -5,7 +5,11 @@ exec 2>&1
 
 # check if database exists
 mysql_ready() {
+    {{#if bind.database.first.cfg.local_only ~}}
+    mysqladmin ping -h 127.0.0.1 -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} > /dev/null 2>&1
+    {{else ~}}
     mysqladmin ping -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} > /dev/null 2>&1
+    {{/if ~}}
 }
 
 if !(mysql_ready) then
@@ -14,12 +18,21 @@ if !(mysql_ready) then
 fi
 
 # create database
+{{#if bind.database.first.cfg.local_only ~}}
+mysql -h 127.0.0.1 -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} -e "create database IF NOT EXISTS {{bind.database.first.cfg.username}}"
+mysql -h 127.0.0.1 -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} -D {{bind.database.first.cfg.username}} < {{pkg.path}}/database/create-tables.sql
+{{else ~}}
 mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} -e "create database IF NOT EXISTS {{bind.database.first.cfg.username}}"
 mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}} -D {{bind.database.first.cfg.username}} < {{pkg.path}}/database/create-tables.sql
+{{/if ~}}
 
 mkdir {{pkg.path}}/bin
 
+{{#if bind.database.first.cfg.local_only ~}}
+printf "#! /bin/bash\n mysql -h 127.0.0.1 -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}}" >> {{pkg.path}}/bin/mysql.sh
+{{else ~}}
 printf "#! /bin/bash\n mysql -h {{bind.database.first.sys.ip}} -u {{bind.database.first.cfg.username}} -p{{bind.database.first.cfg.password}}" >> {{pkg.path}}/bin/mysql.sh
+{{/if ~}}
 
 chmod +x {{pkg.path}}/bin/mysql.sh
 chown hab:hab {{pkg.path}}/bin/mysql.sh

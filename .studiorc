@@ -19,7 +19,8 @@ function load_dev_config() {
   export HAB_MYSQL="
 app_username='lancewf'
 app_password='lancewf'
-bind='0.0.0.0'
+bind='127.0.0.1'
+local_only=true
 
 "
   export HAB_LEMP="
@@ -86,7 +87,7 @@ function start_mysql() {
 
   start_sup
 
-  hab start core/mysql
+  hab start lancewf/mysql
 
   wait_or_fail_for_port_to_listen $MYSQL_PORT
 }
