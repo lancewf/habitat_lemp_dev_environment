@@ -25,4 +25,5 @@ keepalive_timeout = 60
 
 [http.listen]
 port = 80
-
+listen = "0.0.0.0"
+local_only = false

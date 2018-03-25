@@ -26,12 +26,13 @@ local_only=true
   export HAB_LEMP="
 [http.listen]
 port = $LEMP_PORT
+listen='0.0.0.0'
 
 "
 
   export HAB_PHP="
 port = $PHP_PORT
-listen ='0.0.0.0'
+listen ='127.0.0.1'
 
 "
 }
